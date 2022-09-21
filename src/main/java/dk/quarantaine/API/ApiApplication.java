@@ -1,4 +1,4 @@
-package dk.quarantaine.API;
+package dk.quarantaine.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
