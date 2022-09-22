@@ -9,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import dk.quarantaine.api.application.helper.FomatHelper;
+import dk.quarantaine.api.application.helper.FormatHelper;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -19,7 +19,7 @@ public class FormatHelperTests {
     public void validatePhoneNumber_DosentValidate(String nonValidNumers){
         
         //ACT
-        boolean actual = FomatHelper.validatePhoneNumber(nonValidNumers);
+        boolean actual = FormatHelper.validatePhoneNumber(nonValidNumers);
 
         //VERIFY
         assertFalse(actual);
@@ -32,7 +32,7 @@ public class FormatHelperTests {
          String nullLiteral = null;
 
          //ACT
-         boolean actual = FomatHelper.validatePhoneNumber(nullLiteral);
+         boolean actual = FormatHelper.validatePhoneNumber(nullLiteral);
  
          //VERIFY
          assertFalse(actual);
@@ -44,7 +44,7 @@ public class FormatHelperTests {
         String validNumber = "52148634";
 
         //ACT
-        boolean actual = FomatHelper.validatePhoneNumber(validNumber);
+        boolean actual = FormatHelper.validatePhoneNumber(validNumber);
 
         //VERIFY
         assertTrue(actual);
@@ -55,7 +55,7 @@ public class FormatHelperTests {
     @ValueSource(strings= {"2%Y8NCpT%o7d$Ak%ZJm8","SJyLKP8UD@T4cETyBR5@","%9KuDTPs@#oNJUi@jUVq","Bwr5DG6%","jFt*39cj","cg$7Y$qG","G^Ro$v25","20BagerJensen%45"})
     public void validatePassword_ValidPassword(String validPasswords){
         //ACT
-        boolean actual = FomatHelper.validatePassword(validPasswords);
+        boolean actual = FormatHelper.validatePassword(validPasswords);
 
         //VERIFY
         assertTrue(actual);
@@ -65,7 +65,7 @@ public class FormatHelperTests {
     @ValueSource(strings= {"3K@y","z&hrn28^b4r^8isrbuc%","BPDBYLD&VH2@LRKJ548C","sQioB&FXgpe$*FRvR*Sj","tvymWmqbcu6UHeJmy3PE","!&&^#79!59295%$33*^4","HxvLcGdGuCaENNUaGMZY","$^QW!JD!%GGFGD@SZTLG"})
     public void validatePassword_NotValid(String nonvalid){
         //ACT
-        boolean actual = FomatHelper.validatePassword(nonvalid);
+        boolean actual = FormatHelper.validatePassword(nonvalid);
 
         //VERIFY
         assertFalse(actual);
@@ -74,7 +74,7 @@ public class FormatHelperTests {
     @Test
     public void validatePassword_Null(){
         //ACT
-        boolean actual = FomatHelper.validatePassword(null);
+        boolean actual = FormatHelper.validatePassword(null);
 
         //VERIFY
         assertFalse(actual);
@@ -84,7 +84,7 @@ public class FormatHelperTests {
     @ValueSource(strings= {"dsaiqw!\"", "NonVal!dUIsername2"})
     public void validateUsername_NotValid(String userNames){
         //ACT
-        boolean actual = FomatHelper.validateUsername(userNames);
+        boolean actual = FormatHelper.validateUsername(userNames);
 
 
         //^(.*[A-Za-z\\d]){6,}$
@@ -96,7 +96,7 @@ public class FormatHelperTests {
     @ValueSource(strings= {"UTKsH7vd","ETuvpfRU","empRKPBD","3YmRPGxH","RHNHvb3E"})
     public void validateUsername_Valid(String userNames){
         //ACT
-        boolean actual = FomatHelper.validateUsername(userNames);
+        boolean actual = FormatHelper.validateUsername(userNames);
 
         //VERIFY
         assertTrue(actual);
@@ -105,7 +105,7 @@ public class FormatHelperTests {
     @Test
     public void validateUsername_Null(){
         //ACT
-        boolean actual = FomatHelper.validateUsername(null);
+        boolean actual = FormatHelper.validateUsername(null);
 
         //VERIFY
         assertFalse(actual);

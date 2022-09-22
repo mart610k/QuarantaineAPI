@@ -10,6 +10,10 @@ public class RegisterUserDTO {
 
     String password;
 
+    String phoneNumber;
+
+    String name;
+
 
     public RegisterUserDTO() {
     }

@@ -1,6 +1,6 @@
 package dk.quarantaine.api.application.helper;
 
-public class FomatHelper {
+public class FormatHelper {
     
     public static boolean validatePassword(String toValidate){
         return (toValidate == null ? false : toValidate.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#^*?&])[A-Za-z\\d@$!#%^*?&]{8,}$"));
