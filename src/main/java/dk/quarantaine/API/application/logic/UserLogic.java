@@ -2,6 +2,7 @@ package dk.quarantaine.api.application.logic;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Component;
 
 import dk.quarantaine.api.application.data.UserService;
 import dk.quarantaine.api.application.helper.FormatHelper;
@@ -9,6 +10,7 @@ import dk.quarantaine.api.application.dto.RegisterUserDTO;
 import dk.quarantaine.api.application.exception.FormatException;
 import dk.quarantaine.api.application.exception.ObjectExistsException;
 
+@Component
 public class UserLogic {
     int strength = 12;
       
@@ -37,6 +39,12 @@ public class UserLogic {
     }
 
 
+    /**
+     * Registers the user sent in throws exceptions when not successfull.
+     * @param registerUserDTO the user object to register.
+     * @throws FormatException exception thrown when format does not match.
+     * @throws ObjectExistsException Thrown when user are not created.
+     */
     public void registerUser(RegisterUserDTO registerUserDTO) throws FormatException,ObjectExistsException{
         if(!FormatHelper.validatePassword(registerUserDTO.getPassword())){
             throw new FormatException("Password does not match password policy");
