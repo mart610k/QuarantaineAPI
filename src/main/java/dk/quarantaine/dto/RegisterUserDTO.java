@@ -1,4 +1,4 @@
-package dk.quarantaine.api.dto;
+package dk.quarantaine.dto;
 
 import lombok.Getter;
 import lombok.Setter;
