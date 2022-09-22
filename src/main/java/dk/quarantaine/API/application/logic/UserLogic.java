@@ -3,7 +3,6 @@ package dk.quarantaine.api.application.logic;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class UserLogic {
-
     int strength = 12;
       
 
@@ -27,16 +26,4 @@ public class UserLogic {
     public boolean verifyPassword(String plainPassword, String hash){
         return BCrypt.checkpw(plainPassword, hash);
     }
-
-    public boolean validatePassword(String toValidate){
-        return toValidate.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%#^*?&])[A-Za-z\\d@$!#%^*?&]{8,}$");
-        
-    }
-
-
-    public boolean validatePhoneNumber(String toValidate) {
-        return (toValidate == null ? false : toValidate.matches("^[0-9]{8}$"));
-    }
-
-
 }
