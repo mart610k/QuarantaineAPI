@@ -47,16 +47,16 @@ public class UserLogic {
      */
     public void registerUser(RegisterUserDTO registerUserDTO) throws FormatException,ObjectExistsException{
         if(!FormatHelper.validatePassword(registerUserDTO.getPassword())){
-            throw new FormatException("Password does not match password policy");
+            throw new FormatException("Password does not match password policy","Password","");
         }
         else if(!FormatHelper.validateUsername(registerUserDTO.getUsername())){
-            throw new FormatException("Username contains illigal characters");
+            throw new FormatException("Contains illigal characters","Username",registerUserDTO.getUsername());
         }
         else if (!FormatHelper.validatePhoneNumber(registerUserDTO.getPhoneNumber())){
-            throw new FormatException("Phone not a valid format");
+            throw new FormatException("Not a valid format","PhoneNumber",registerUserDTO.getPhoneNumber());
         }
         else if (registerUserDTO.getName().isEmpty()){
-            throw new FormatException("Name cannot be empty");
+            throw new FormatException("Cannot be empty","Name",registerUserDTO.getName());
         }
         
         //Hash password

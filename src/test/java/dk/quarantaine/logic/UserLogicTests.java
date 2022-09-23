@@ -116,7 +116,7 @@ public class UserLogicTests {
         //ACT + VERIFY
         FormatException exception = assertThrows(FormatException.class,() -> userLogic.registerUser(userDTO));
 
-        String expectedMessage = "Username contains illigal characters";
+        String expectedMessage = "Contains illigal characters";
         String actualMessage = exception.getMessage();
         assertEquals(actualMessage, expectedMessage);
     }
@@ -134,7 +134,7 @@ public class UserLogicTests {
          //ACT + VERIFY
          FormatException exception = assertThrows(FormatException.class,() -> userLogic.registerUser(userDTO));
  
-         String expectedMessage = "Phone not a valid format";
+         String expectedMessage = "Not a valid format";
          String actualMessage = exception.getMessage();
          assertEquals(actualMessage, expectedMessage);
     }
@@ -151,7 +151,7 @@ public class UserLogicTests {
        //ACT + VERIFY
        FormatException exception = assertThrows(FormatException.class,() -> userLogic.registerUser(userDTO));
 
-       String expectedMessage = "Name cannot be empty";
+       String expectedMessage = "Cannot be empty";
        String actualMessage = exception.getMessage();
        assertEquals(actualMessage, expectedMessage);
     }
@@ -165,9 +165,9 @@ public class UserLogicTests {
         userDTO.setPhoneNumber("48392038");
         userDTO.setUsername("test32");
 
-        when(userService.registerUser(userDTO)).thenReturn(true);
-
+        
         try{
+            when(userService.registerUser(userDTO)).thenReturn(true);
             //ACT
             userLogic.registerUser(userDTO);
             //VERIFY
@@ -187,15 +187,21 @@ public class UserLogicTests {
         userDTO.setPassword("LgkHaTv7e6GZm4Z2!EtN");
         userDTO.setPhoneNumber("48392038");
         userDTO.setUsername("test32");
+        try{
+            when(userService.registerUser(any())).thenReturn(false);
 
-        when(userService.registerUser(any())).thenReturn(false);
+            //ACT + VERIFY
+            ObjectExistsException exception = assertThrows(ObjectExistsException.class,() -> userLogic.registerUser(userDTO));
+    
+            String expectedMessage = "Could not create object";
+            String actualMessage = exception.getMessage();
+            assertEquals(actualMessage, expectedMessage);   
+        }
+        catch(Exception e){
+            fail("Unexpected Exception called");
+        }
 
-         //ACT + VERIFY
-         ObjectExistsException exception = assertThrows(ObjectExistsException.class,() -> userLogic.registerUser(userDTO));
- 
-         String expectedMessage = "Could not create object";
-         String actualMessage = exception.getMessage();
-         assertEquals(actualMessage, expectedMessage);   
+       
     }
 
 }
