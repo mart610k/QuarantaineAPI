@@ -8,7 +8,7 @@ import java.sql.Connection;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import dk.quarantaine.api.application.dto.RegisterUserDTO;
+import dk.quarantaine.commons.dto.RegisterUserDTO;
 
 
 @Service

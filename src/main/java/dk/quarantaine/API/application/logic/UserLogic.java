@@ -5,10 +5,10 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 import dk.quarantaine.api.application.data.UserService;
-import dk.quarantaine.api.application.helper.FormatHelper;
-import dk.quarantaine.api.application.dto.RegisterUserDTO;
-import dk.quarantaine.api.application.exception.FormatException;
-import dk.quarantaine.api.application.exception.ObjectExistsException;
+import dk.quarantaine.commons.helpers.FormatHelper;
+import dk.quarantaine.commons.exceptions.FormatException;
+import dk.quarantaine.commons.exceptions.ObjectExistsException;
+import dk.quarantaine.commons.dto.RegisterUserDTO;
 
 @Component
 public class UserLogic {

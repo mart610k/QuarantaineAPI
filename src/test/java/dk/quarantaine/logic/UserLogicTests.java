@@ -16,9 +16,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import dk.quarantaine.api.application.data.UserService;
-import dk.quarantaine.api.application.dto.RegisterUserDTO;
-import dk.quarantaine.api.application.exception.FormatException;
-import dk.quarantaine.api.application.exception.ObjectExistsException;
+import dk.quarantaine.commons.exceptions.FormatException;
+import dk.quarantaine.commons.exceptions.ObjectExistsException;
+import dk.quarantaine.commons.dto.RegisterUserDTO;
 import dk.quarantaine.api.application.logic.UserLogic;
 
 
