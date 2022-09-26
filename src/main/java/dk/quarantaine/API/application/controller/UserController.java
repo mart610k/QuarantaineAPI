@@ -13,20 +13,31 @@ import dk.quarantaine.commons.dto.ExceptionMessage;
 import dk.quarantaine.commons.exceptions.FormatException;
 import dk.quarantaine.commons.exceptions.ObjectExistsException;
 import lombok.extern.log4j.Log4j2;
+import dk.quarantaine.api.application.dto.MessageDTO;
 import dk.quarantaine.api.application.logic.UserLogic;
 
-@RestController("")
+@RestController
+@RequestMapping("api")
 @Log4j2
 public class UserController {
     @Autowired
     UserLogic userLogic;
 
-    @RequestMapping(value = "register", method = RequestMethod.POST)
-    public ResponseEntity<?> RegisterUser(@RequestBody RegisterUserDTO registerUser)
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public ResponseEntity<?> testEndpoint(){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity<?> registerUser(@RequestBody RegisterUserDTO registerUser)
     {
+        log.warn("api/register Called");
+
         try{
             userLogic.registerUser(registerUser);
-            return new ResponseEntity<>(HttpStatus.OK);
+            MessageDTO messageDTO = new MessageDTO();
+            messageDTO.setMessage("User Created");
+            return new ResponseEntity<>(messageDTO,HttpStatus.OK);
         }
         //THERE must be a better way to acheive what i want here.... -MBA
         catch(FormatException fe){
