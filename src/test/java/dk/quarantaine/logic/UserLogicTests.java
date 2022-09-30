@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,10 +15,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import dk.quarantaine.api.application.data.TokenService;
 import dk.quarantaine.api.application.data.UserService;
+import dk.quarantaine.api.application.dto.OauthRequestDTO;
 import dk.quarantaine.commons.exceptions.FormatException;
 import dk.quarantaine.commons.exceptions.ObjectExistsException;
+import dk.quarantaine.commons.dto.ClientIDAndSecret;
+import dk.quarantaine.commons.dto.OauthTokenResponseDTO;
 import dk.quarantaine.commons.dto.RegisterUserDTO;
 import dk.quarantaine.api.application.logic.UserLogic;
 
@@ -31,6 +37,8 @@ public class UserLogicTests {
     @Mock
     UserService userService;
 
+    @Mock
+    TokenService tokenService;
 
     /**
      * Tests if the password does actually hash and checks it towards a Regex
@@ -100,7 +108,7 @@ public class UserLogicTests {
 
         String expectedMessage = "Password does not match password policy";
         String actualMessage = exception.getMessage();
-        assertEquals(actualMessage, expectedMessage);
+        assertEquals( expectedMessage, actualMessage);
     }
 
     @Test
@@ -118,7 +126,7 @@ public class UserLogicTests {
 
         String expectedMessage = "Contains illigal characters";
         String actualMessage = exception.getMessage();
-        assertEquals(actualMessage, expectedMessage);
+        assertEquals( expectedMessage, actualMessage);
     }
     
 
@@ -136,7 +144,7 @@ public class UserLogicTests {
  
          String expectedMessage = "Not a valid format";
          String actualMessage = exception.getMessage();
-         assertEquals(actualMessage, expectedMessage);
+         assertEquals(expectedMessage ,actualMessage);
     }
 
     @Test
@@ -153,7 +161,7 @@ public class UserLogicTests {
 
        String expectedMessage = "Cannot be empty";
        String actualMessage = exception.getMessage();
-       assertEquals(actualMessage, expectedMessage);
+       assertEquals( expectedMessage, actualMessage);
     }
 
     @Test
@@ -195,7 +203,7 @@ public class UserLogicTests {
     
             String expectedMessage = "Could not create object";
             String actualMessage = exception.getMessage();
-            assertEquals(actualMessage, expectedMessage);   
+            assertEquals( expectedMessage, actualMessage);   
         }
         catch(Exception e){
             fail("Unexpected Exception called");
@@ -204,4 +212,155 @@ public class UserLogicTests {
        
     }
 
+    @Test
+    public void authorizeUser_RightPassword(){
+        //SETUP
+        ReflectionTestUtils.setField(userLogic,"clientID","CurrentClientID");
+        ReflectionTestUtils.setField(userLogic,"clientSecret","CurrentClientSecret");
+        try{
+            RegisterUserDTO userdto = new RegisterUserDTO();
+            userdto.setPassword("$2a$12$ZbbCo3RbXgE0PwfL4zbBgOOBEONDWFdIF3aFq.Gigm1fRguoAWluu");
+            userdto.setUsername("username");
+            String userPassPlain = "AmazingPassword#!2";
+            when(userService.getUserInformation("username")).thenReturn(userdto);
+            when(tokenService.save(any(), anyString())).thenReturn(true);
+
+            ClientIDAndSecret clientidAndsecret = new ClientIDAndSecret();
+            clientidAndsecret.setClientID("CurrentClientID");
+            clientidAndsecret.setClientSecret("CurrentClientSecret");
+
+            OauthRequestDTO userCredintials= new OauthRequestDTO();
+            
+            userCredintials.setGrant_type("password");
+            userCredintials.setPassword(userPassPlain);
+            userCredintials.setUsername("username");
+
+            //ACT
+            OauthTokenResponseDTO tokenResponse = userLogic.authorizeUser(clientidAndsecret, userCredintials);
+
+            //VERIFY
+            verify(userService,times(1)).getUserInformation("username");
+            //verify(tokenService.save(any(OauthTokenResponseDTO.class), anyString()),times(1));
+            assertTrue(tokenResponse.getAccess_token().matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"));
+            assertTrue(tokenResponse.getRefresh_token().matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"));
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            fail();
+        }
+    }
+
+    @Test
+    public void authorizeUser_WrongClientID(){
+        //SETUP
+        ReflectionTestUtils.setField(userLogic,"clientID","CurrentClientID");
+        ReflectionTestUtils.setField(userLogic,"clientSecret","CurrentClientSecret");
+        RegisterUserDTO userdto = new RegisterUserDTO();
+        userdto.setPassword("$2a$12$ZbbCo3RbXgE0PwfL4zbBgOOBEONDWFdIF3aFq.Gigm1fRguoAWluu");
+        userdto.setUsername("user1");
+        String userPassPlain = "AmazingPassword#!2";
+        ClientIDAndSecret clientidAndsecret = new ClientIDAndSecret();
+        clientidAndsecret.setClientID("WrongID");
+        clientidAndsecret.setClientSecret("CurrentClientSecret");
+        OauthRequestDTO userCredintials= new OauthRequestDTO();
+        
+        userCredintials.setGrant_type("password");
+        userCredintials.setPassword(userPassPlain);
+        userCredintials.setUsername("user1");
+
+        //ACT
+        Exception exception = assertThrows(Exception.class, ()-> userLogic.authorizeUser(clientidAndsecret, userCredintials));
+
+        //VERIFY
+        assertEquals("ClientID or ClientSecret are not correct" ,exception.getMessage());
+
+
+        
+
+    }
+
+    @Test
+    public void authorizeUser_WrongClientSecret(){
+        //SETUP
+        ReflectionTestUtils.setField(userLogic,"clientID","CurrentClientID");
+        ReflectionTestUtils.setField(userLogic,"clientSecret","CurrentClientSecret");
+        RegisterUserDTO userdto = new RegisterUserDTO();
+        userdto.setPassword("$2a$12$ZbbCo3RbXgE0PwfL4zbBgOOBEONDWFdIF3aFq.Gigm1fRguoAWluu");
+        userdto.setUsername("user1");
+        String userPassPlain = "AmazingPassword#!2";
+        ClientIDAndSecret clientidAndsecret = new ClientIDAndSecret();
+        clientidAndsecret.setClientID("CurrentClientID");
+        clientidAndsecret.setClientSecret("WrongSecret");
+        OauthRequestDTO userCredintials= new OauthRequestDTO();
+        
+        userCredintials.setGrant_type("password");
+        userCredintials.setPassword(userPassPlain);
+        userCredintials.setUsername("user1");
+
+        //ACT
+        Exception exception = assertThrows(Exception.class, ()-> userLogic.authorizeUser(clientidAndsecret, userCredintials));
+
+        //VERIFY
+        assertEquals("ClientID or ClientSecret are not correct" ,exception.getMessage());
+
+
+        
+
+    }
+
+    @Test
+    public void authorizeUser_WrongPassword(){
+        //SETUP
+        ReflectionTestUtils.setField(userLogic,"clientID","CurrentClientID");
+        ReflectionTestUtils.setField(userLogic,"clientSecret","CurrentClientSecret");
+        RegisterUserDTO userdto = new RegisterUserDTO();
+        userdto.setPassword("$2a$12$ZbbCo3RbXgE0PwfL4zbBgOOBEONDWFdIF3aFq.Gigm1fRguoAWluu");
+        userdto.setUsername("user1");
+        String userPassPlain = "NonCorrectPassword";
+        when(userService.getUserInformation("user1")).thenReturn(userdto);
+
+        ClientIDAndSecret clientidAndsecret = new ClientIDAndSecret();
+        clientidAndsecret.setClientID("CurrentClientID");
+        clientidAndsecret.setClientSecret("CurrentClientSecret");
+
+        OauthRequestDTO userCredintials= new OauthRequestDTO();
+        
+        userCredintials.setGrant_type("password");
+        userCredintials.setPassword(userPassPlain);
+        userCredintials.setUsername("user1");
+
+        //ACT
+        Exception exception = assertThrows(Exception.class, ()-> userLogic.authorizeUser(clientidAndsecret, userCredintials));
+
+        //VERIFY
+        assertEquals("User or password are not correct" ,exception.getMessage());
+    }
+
+    @Test
+    public void authorizeUser_NoUserPresent(){
+        //SETUP
+        ReflectionTestUtils.setField(userLogic,"clientID","CurrentClientID");
+        ReflectionTestUtils.setField(userLogic,"clientSecret","CurrentClientSecret");
+        RegisterUserDTO userdto = new RegisterUserDTO();
+        userdto.setPassword("$2a$12$ZbbCo3RbXgE0PwfL4zbBgOOBEONDWFdIF3aFq.Gigm1fRguoAWluu");
+        userdto.setUsername("user1");
+        String userPassPlain = "NonCorrectPassword";
+        when(userService.getUserInformation("user1")).thenReturn(null);
+
+        ClientIDAndSecret clientidAndsecret = new ClientIDAndSecret();
+        clientidAndsecret.setClientID("CurrentClientID");
+        clientidAndsecret.setClientSecret("CurrentClientSecret");
+
+        OauthRequestDTO userCredintials= new OauthRequestDTO();
+        
+        userCredintials.setGrant_type("password");
+        userCredintials.setPassword(userPassPlain);
+        userCredintials.setUsername("user1");
+
+        //ACT
+        Exception exception = assertThrows(Exception.class, ()-> userLogic.authorizeUser(clientidAndsecret, userCredintials));
+
+        //VERIFY
+        assertEquals("User or password are not correct" ,exception.getMessage());
+    }
 }

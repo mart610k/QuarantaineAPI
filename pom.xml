@@ -48,9 +48,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<artifactId>lib</artifactId>
+			<artifactId>lib-quarantaine-commons</artifactId>
 			<groupId>dk.quarantaine.commons</groupId>
-			<version>quarantaine-commons-1</version>
+			<version>0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>

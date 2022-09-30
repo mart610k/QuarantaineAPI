@@ -23,11 +23,20 @@ public class UserController {
     @Autowired
     UserLogic userLogic;
 
+    /**
+     * Testing Endpoint
+     * @return empty body 200 response code
+     */
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<?> testEndpoint(){
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Registers a use in the Database
+     * @param registerUser user to register
+     * @return response tellig what went wrong and what went good
+     */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody RegisterUserDTO registerUser)
     {

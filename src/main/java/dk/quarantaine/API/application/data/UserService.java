@@ -73,4 +73,50 @@ public class UserService {
         return true;
     }
     
+    public RegisterUserDTO getUserInformation(String username){
+        Connection con = null;
+        RegisterUserDTO userDTO = null;
+        try{  
+            //Class.forName("com.mysql.jdbc.Driver");  
+            con=DriverManager.getConnection( 
+                String.format("jdbc:mysql://%s:%s/%s", mysqlServerAddress, mysqlServerPort,mysqlDatabaseName),mysqlDatabaseUser,mysqlDatabasePassword);  
+            //here sonoo is database name, root is username and password  
+            PreparedStatement stmt = con.prepareStatement("SELECT `username`,`password` FROM `user`  WHERE `username`=?;");
+            stmt.setString(1,username);
+            
+            ResultSet rs = stmt.executeQuery();
+            userDTO = new RegisterUserDTO();
+
+            while(rs.next())  {
+                userDTO.setUsername(rs.getString(1));
+                userDTO.setPassword(rs.getString(2));
+            }
+            
+            stmt.close();
+
+        }
+        
+        catch(Exception e){ 
+            System.out.println("----------------------------");
+            log.warning(e.getLocalizedMessage());
+            //log.warning(e.getCause().getClass().getName());
+            e.printStackTrace();
+            System.out.println("----------------------------");
+
+            return null;
+        }
+        finally{
+            if(con != null){
+                try{
+                    con.close();
+
+                }
+                catch(Exception e){
+
+                }
+            }
+        }
+        return userDTO;
+    }  
+
 }

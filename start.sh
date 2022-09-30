@@ -1,0 +1,1 @@
+java -jar  API-0.1-jar-with-dependencies.jar >./log.log 2>&1 &
