@@ -1,10 +1,12 @@
 package dk.quarantaine.api.application.helpers;
 
 import java.net.URLDecoder;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import dk.quarantaine.api.application.dto.OauthRequestDTO;
 import dk.quarantaine.commons.dto.ClientIDAndSecret;
@@ -78,6 +80,13 @@ public class Oauth2Helper {
 
         return oauthRequestDTO;
 
+    }
+
+    public static byte[] convertUUIDToBinary(UUID uuid){
+        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+        return bb.array();
     }
     
 }

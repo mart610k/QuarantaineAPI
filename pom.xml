@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dk.quarantaine</groupId>
-	<artifactId>API</artifactId>
-	<version>0.1</version>
-	<name>API</name>
+	<artifactId>Quarantaine-API</artifactId>
+	<version>0.2</version>
+	<name>Quarantaine API</name>
 	<description>Quarantine api</description>
 	<properties>
 		<java.version>11</java.version>

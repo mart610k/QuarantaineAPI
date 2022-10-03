@@ -5,10 +5,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import dk.quarantaine.api.application.helpers.Oauth2Helper;
 import dk.quarantaine.commons.dto.OauthTokenResponseDTO;
 import dk.quarantaine.commons.exceptions.ObjectExistsException;
 import lombok.extern.java.Log;
@@ -44,10 +46,11 @@ public class TokenService {
                 String.format("jdbc:mysql://%s:%s/%s", mysqlServerAddress, mysqlServerPort,mysqlDatabaseName),mysqlDatabaseUser,mysqlDatabasePassword);  
 
 
-                PreparedStatement stmt = con.prepareStatement("INSERT INTO `oauth2token`(`username`, `access_token`, `refresh_token`, `token_type`, `valid_to`) value (?,UUID_TO_BIN(?),UUID_TO_BIN(?),?,NOW() + INTERVAL ? SECOND);");
+            PreparedStatement stmt = con.prepareStatement("INSERT INTO `oauth2token`(`username`, `access_token`, `refresh_token`, `token_type`, `valid_to`) value (?,?,?,?,NOW() + INTERVAL ? SECOND);");
             stmt.setString(1,username);
-            stmt.setString(2,oauthTokenResponseDTO.getAccess_token());
-            stmt.setString(3,oauthTokenResponseDTO.getRefresh_token());
+
+            stmt.setBytes(2, Oauth2Helper.convertUUIDToBinary(UUID.fromString(oauthTokenResponseDTO.getAccess_token())));
+            stmt.setBytes(3, Oauth2Helper.convertUUIDToBinary(UUID.fromString(oauthTokenResponseDTO.getRefresh_token())));
             stmt.setString(4,oauthTokenResponseDTO.getToken_type());
             stmt.setInt(5,tokenValiditySeconds);
     
