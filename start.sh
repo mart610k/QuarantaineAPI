@@ -1,0 +1,1 @@
+java -jar Quarantaine-API-0.2-jar-with-dependencies.jar >./log.log 2>&1 &

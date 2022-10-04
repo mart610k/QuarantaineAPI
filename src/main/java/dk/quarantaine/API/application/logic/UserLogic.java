@@ -1,13 +1,20 @@
 package dk.quarantaine.api.application.logic;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
+import dk.quarantaine.api.application.data.TokenService;
 import dk.quarantaine.api.application.data.UserService;
+import dk.quarantaine.api.application.dto.OauthRequestDTO;
 import dk.quarantaine.commons.helpers.FormatHelper;
 import dk.quarantaine.commons.exceptions.FormatException;
 import dk.quarantaine.commons.exceptions.ObjectExistsException;
+import dk.quarantaine.commons.dto.ClientIDAndSecret;
+import dk.quarantaine.commons.dto.OauthTokenResponseDTO;
 import dk.quarantaine.commons.dto.RegisterUserDTO;
 
 @Component
@@ -16,6 +23,19 @@ public class UserLogic {
       
     @Autowired
     UserService userService;
+
+    @Autowired
+    TokenService tokenService;
+
+    @Value("${application.clientID}")
+    String clientID;
+
+    @Value("${application.clientSecret}")
+    String clientSecret;
+
+
+    @Value("${access.token.validity.seconds:3600}")
+    int tokenValiditySeconds;
 
     /**
      * Hashes the password with Bcrypt algorithm
@@ -38,6 +58,31 @@ public class UserLogic {
         return BCrypt.checkpw(plainPassword, hash);
     }
 
+
+    public OauthTokenResponseDTO authorizeUser(ClientIDAndSecret clientidAndsecret, OauthRequestDTO userCredintials) throws Exception{
+        if(!clientID.equals(clientidAndsecret.getClientID()) || !clientSecret.equals(clientidAndsecret.getClientSecret())){
+            throw new Exception("ClientID or ClientSecret are not correct");
+        }
+        
+        RegisterUserDTO userinfo = userService.getUserInformation(userCredintials.getUsername());
+        
+        if(userinfo == null || !verifyPassword(userCredintials.getPassword(), userinfo.getPassword())){
+            throw new Exception("User or password are not correct");
+        }
+        
+        OauthTokenResponseDTO token = new OauthTokenResponseDTO();
+        token.setToken_type("Bearer");
+        token.setAccess_token(UUID.randomUUID().toString());
+        token.setRefresh_token(UUID.randomUUID().toString());
+        token.setValidity(tokenValiditySeconds);
+
+
+        if(tokenService.save(token, userinfo.getUsername())){
+            return token;
+        }
+
+        throw new Exception("failed to save the token in the databse");
+    }
 
     /**
      * Registers the user sent in throws exceptions when not successfull.
