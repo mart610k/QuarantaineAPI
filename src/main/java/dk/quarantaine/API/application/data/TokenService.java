@@ -36,6 +36,13 @@ public class TokenService {
     @Value("${access.token.validity.seconds:3600}")
     int tokenValiditySeconds;
 
+    /**
+     * Saves the token in the database
+     * @param oauthTokenResponseDTO Token to save
+     * @param username user who generated the token
+     * @return whether or not it was sucessful
+     * @throws ObjectExistsException thrown if the access_token is already existing on the database
+     */
     public boolean save(OauthTokenResponseDTO oauthTokenResponseDTO,String username) throws ObjectExistsException{
         Connection con;
         
@@ -78,7 +85,12 @@ public class TokenService {
         return true;
     }
 
-    public String getUserByToken(String token){
+    /**
+     * Gets the username by an access token
+     * @param accessToken the access token to get for
+     * @return The username associated with the token.
+     */
+    public String getUserByToken(String accessToken){
         return null;
     }
     

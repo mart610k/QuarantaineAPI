@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MessageDTO {
-    String Message;
+    String message;
     
     public MessageDTO() {
     }

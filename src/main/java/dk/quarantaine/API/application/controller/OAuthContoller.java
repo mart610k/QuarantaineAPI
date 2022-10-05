@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import dk.quarantaine.api.application.dto.OauthRequestDTO;
+import dk.quarantaine.commons.dto.OauthRequestDTO;
 import dk.quarantaine.api.application.helpers.Oauth2Helper;
 import dk.quarantaine.api.application.logic.UserLogic;
 import dk.quarantaine.commons.dto.ClientIDAndSecret;
@@ -27,6 +27,12 @@ public class OAuthContoller {
     @Autowired
     UserLogic userLogic;
 
+    /**
+     * Generates an Access token for the user if valid
+     * @param authorization HTTP authorization Header as a string
+     * @param body HTTP Body as a string
+     * @return Responds with a valid token or error based on if the user could log in
+     */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> GenerateAccessToken(@RequestHeader String authorization,@RequestBody String body){
         //Decode Request into Useable values

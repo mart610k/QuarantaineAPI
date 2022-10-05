@@ -8,12 +8,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import dk.quarantaine.api.application.dto.OauthRequestDTO;
+import dk.quarantaine.commons.dto.OauthRequestDTO;
 import dk.quarantaine.commons.dto.ClientIDAndSecret;
 import dk.quarantaine.commons.exceptions.FormatException;
 
 public class Oauth2Helper {
 
+    /**
+     * Decodes and obtains the client ID and Client Secret from raw header string
+     * @param authorizationHeader the raw header that the client sends
+     * @return the object containing the Client ID and Client Secret
+     * @throws FormatException if the header does not fulfill the format expected
+     */
     public static ClientIDAndSecret decodeAuthorizationHeader(String authorizationHeader) throws FormatException{
         String decodedString ;
         if(!authorizationHeader.toLowerCase().startsWith("basic ")){
@@ -43,7 +49,12 @@ public class Oauth2Helper {
         return clientidAndsecret;
     }
 
-
+    /**
+     * Decodes the Oauth2 body and returns the values contained within
+     * @param authBodyRequest the raw body from a token request
+     * @return an object containing the values required
+     * @throws FormatException if the body does not fulfill the format required
+     */
     public static OauthRequestDTO decodeOauthBodyRequest(String authBodyRequest) throws FormatException{
         if(authBodyRequest == null){
             throw new FormatException("body Cant be null");
@@ -82,6 +93,11 @@ public class Oauth2Helper {
 
     }
 
+    /**
+     * Helper method to convert a UUID to Binary to allow for a Database unaware conversion
+     * @param uuid the uuid to convert.
+     * @return the byte stream from the UUID
+     */
     public static byte[] convertUUIDToBinary(UUID uuid){
         ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
         bb.putLong(uuid.getMostSignificantBits());

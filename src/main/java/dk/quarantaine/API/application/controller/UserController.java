@@ -24,18 +24,9 @@ public class UserController {
     UserLogic userLogic;
 
     /**
-     * Testing Endpoint
-     * @return empty body 200 response code
-     */
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<?> testEndpoint(){
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    /**
-     * Registers a use in the Database
+     * Registers a user in the Database
      * @param registerUser user to register
-     * @return response tellig what went wrong and what went good
+     * @return response tellig what went wrong or if it went good
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody RegisterUserDTO registerUser)
