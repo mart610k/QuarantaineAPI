@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>dk.quarantaine</groupId>
 	<artifactId>Quarantaine-API</artifactId>
-	<version>0.2</version>
+	<version>0.3</version>
 	<name>Quarantaine API</name>
 	<description>Quarantine api</description>
 	<properties>
