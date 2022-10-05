@@ -19,7 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import dk.quarantaine.api.application.data.TokenService;
 import dk.quarantaine.api.application.data.UserService;
-import dk.quarantaine.api.application.dto.OauthRequestDTO;
+import dk.quarantaine.commons.dto.OauthRequestDTO;
 import dk.quarantaine.commons.exceptions.FormatException;
 import dk.quarantaine.commons.exceptions.ObjectExistsException;
 import dk.quarantaine.commons.dto.ClientIDAndSecret;
