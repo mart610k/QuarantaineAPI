@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 
 import dk.quarantaine.api.application.data.TokenService;
 import dk.quarantaine.api.application.data.UserService;
-import dk.quarantaine.api.application.dto.OauthRequestDTO;
 import dk.quarantaine.commons.helpers.FormatHelper;
 import dk.quarantaine.commons.exceptions.FormatException;
 import dk.quarantaine.commons.exceptions.ObjectExistsException;
+import dk.quarantaine.commons.dto.OauthRequestDTO;
 import dk.quarantaine.commons.dto.ClientIDAndSecret;
 import dk.quarantaine.commons.dto.OauthTokenResponseDTO;
 import dk.quarantaine.commons.dto.RegisterUserDTO;
@@ -59,6 +59,13 @@ public class UserLogic {
     }
 
 
+    /**
+     * Authorizes the user given the Credentials and Clint credentials
+     * @param clientidAndsecret the client credentials
+     * @param userCredintials the user credentials
+     * @return the access token which can be used for loggin in
+     * @throws Exception called when user is not authorized or failed to save within in the database.
+     */
     public OauthTokenResponseDTO authorizeUser(ClientIDAndSecret clientidAndsecret, OauthRequestDTO userCredintials) throws Exception{
         if(!clientID.equals(clientidAndsecret.getClientID()) || !clientSecret.equals(clientidAndsecret.getClientSecret())){
             throw new Exception("ClientID or ClientSecret are not correct");

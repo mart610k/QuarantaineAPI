@@ -32,6 +32,12 @@ public class UserService {
     @Value("${mysql.database.password}")
     String mysqlDatabasePassword;
 
+    /**
+     * Registers the given user in the database
+     * @param user the userinformation
+     * @return whether or not it was a sucessfull operation
+     * @throws ObjectExistsException throw if the username already exists 
+     */
     public boolean registerUser(RegisterUserDTO user) throws ObjectExistsException {
         Connection con;
         
@@ -73,6 +79,11 @@ public class UserService {
         return true;
     }
     
+    /**
+     * Gets the user's information on username and password
+     * @param username the username password to seach for
+     * @return null if the object does not exist or the information assosiated to the user.
+     */
     public RegisterUserDTO getUserInformation(String username){
         Connection con = null;
         RegisterUserDTO userDTO = null;

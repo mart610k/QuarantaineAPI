@@ -50,7 +50,7 @@
 		<dependency>
 			<artifactId>lib-quarantaine-commons</artifactId>
 			<groupId>dk.quarantaine.commons</groupId>
-			<version>0.2</version>
+			<version>0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>

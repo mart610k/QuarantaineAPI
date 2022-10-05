@@ -24,9 +24,9 @@ public class UserController {
     UserLogic userLogic;
 
     /**
-     * Registers a use in the Database
+     * Registers a user in the Database
      * @param registerUser user to register
-     * @return response tellig what went wrong and what went good
+     * @return response tellig what went wrong or if it went good
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody RegisterUserDTO registerUser)
