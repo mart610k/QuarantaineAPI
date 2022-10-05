@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import dk.quarantaine.commons.dto.ClientIDAndSecret;
-import dk.quarantaine.api.application.dto.OauthRequestDTO;
+import dk.quarantaine.commons.dto.OauthRequestDTO;
 import dk.quarantaine.api.application.helpers.Oauth2Helper;
 import dk.quarantaine.commons.exceptions.FormatException;
 
