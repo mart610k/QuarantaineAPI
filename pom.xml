@@ -11,10 +11,12 @@
 	<groupId>dk.quarantaine</groupId>
 	<artifactId>Quarantaine-API</artifactId>
 	<version>0.3</version>
+	<packaging>jar</packaging>
 	<name>Quarantaine API</name>
 	<description>Quarantine api</description>
 	<properties>
 		<java.version>11</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -60,8 +62,13 @@
 		</dependency>
  </dependencies>
 	<build>
+
 		<plugins>
-		<!-- any other plugins -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>           
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
@@ -84,22 +91,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-  	</build>
-	<!-- <build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build> -->
 
+  	</build>
+	
 </project>
